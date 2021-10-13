@@ -14,32 +14,32 @@ def products(request):
     context = {
     "title": "GeekShop - Каталог",
     "products": [
-        {"img": "vendor/img/products/Adidas-hoodie.png",
+        {"img": "products_images/Adidas-hoodie.png",
         "price": "6090",
         "desc": "Мягкая ткань для свитшотов. Стиль и комфорт – это образ жизни.",
         "button": "<button type='button' class='btn btn-outline-success'>Отправить в корзину</button>"
         },
-        {"img": "vendor/img/products/Blue-jacket-The-North-Face.png",
+        {"img": "products_images/Blue-jacket-The-North-Face.png",
         "price": "23725",
         "desc": "Гладкая ткань. Водонепроницаемое покрытие. Легкий и теплый пуховый наполнитель.",
         "button": "<button type='button' class='btn btn-outline-danger'>Удалить из корзины</button>"
         },
-        {"img": "vendor/img/products/Brown-sports-oversized-top-ASOS-DESIGN.png",
+        {"img": "products_images/Brown-sports-oversized-top-ASOS-DESIGN.png",
         "price": "3390",
         "desc": "Материал с плюшевой текстурой. Удобный и мягкий.",
         "button": "<button type='button' class='btn btn-outline-success'>Отправить в корзину</button>"
         },
-        {"img": "vendor/img/products/Black-Nike-Heritage-backpack.png",
+        {"img": "products_images/Black-Nike-Heritage-backpack.png",
         "price": "2340",
         "desc": "Плотная ткань. Легкий материал.",
         "button": "<button type='button' class='btn btn-outline-success'>Отправить в корзину</button>"
         },
-        {"img": "vendor/img/products/Black-Dr-Martens-shoes.png",
+        {"img": "products_images/Black-Dr-Martens-shoes.png",
         "price": "13590",
         "desc": "Гладкий кожаный верх. Натуральный материал.",
         "button": "<button type='button' class='btn btn-outline-success'>Отправить в корзину</button>"
         },
-        {"img": "vendor/img/products/Dark-blue-wide-leg-ASOs-DESIGN-trousers.png",
+        {"img": "products_images/Dark-blue-wide-leg-ASOs-DESIGN-trousers.png",
         "price": "2890",
         "desc": "Легкая эластичная ткань сирсакер Фактурная ткань.",
         "button": "<button type='button' class='btn btn-outline-success'>Отправить в корзину</button>"
