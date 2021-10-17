@@ -26,8 +26,10 @@ class UserRegistrationForm(UserCreationForm):
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control py-4', 'placeholder': 'Подтвердите пароль'}))
     image = forms.ImageField(widget=forms.FileInput(attrs={
-        'class': 'py-4'}))
+        'class': 'py-4'}), required=False)
+    birth = forms.DateField(widget=forms.DateInput(attrs={
+        'class': 'form-control py-4', 'placeholder': 'Введите дату рождения'}), required=False)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'image')
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'image', 'birth')
