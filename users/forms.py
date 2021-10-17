@@ -25,7 +25,9 @@ class UserRegistrationForm(UserCreationForm):
         'class': 'form-control py-4', 'placeholder': 'Введите пароль'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control py-4', 'placeholder': 'Подтвердите пароль'}))
-        
+    image = forms.ImageField(widget=forms.FileInput(attrs={
+        'class': 'py-4'}))
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'image')
