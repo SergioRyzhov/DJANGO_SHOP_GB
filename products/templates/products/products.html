@@ -62,7 +62,7 @@
                         <div class="card h-100">
                             <a href="#">
                                 <img class="card-img-top"
-                                    src="{% get_static_prefix %}{{ product.img }}"
+                                    src="{% get_media_prefix %}{{ product.image }}"
                                     alt="">
                             </a>
                             <div class="card-body">
@@ -73,10 +73,10 @@
                                 {% localize on %}
                                 <h5>{{ product.price|intcomma }},00 руб.</h5>
                                 {% endlocalize %}
-                                <p class="card-text">{{ product.desc }}</p>
+                                <p class="card-text">{{ product.description }}</p>
                             </div>
                             <div class="card-footer text-center">
-                                {{ product.button|safe }}
+                                <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
                             </div>
                         </div>
                     </div>
