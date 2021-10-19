@@ -41,5 +41,5 @@ class UserRegistrationForm(UserCreationForm):
         birth = self.cleaned_data['birth']
         if today.year - birth.year < 18:
             # raise ValidationError('18 years exception')
-            self.add_error("birth", "18 years exception")
+            self.add_error("birth", "Нет 18ти")
         return birth
