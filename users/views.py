@@ -38,7 +38,7 @@ def registration(request):
 
 def profile(request):
     if request.method == 'POST':
-        form = UsersProfileForm(instance=request.user, data=request.POST)
+        form = UsersProfileForm(instance=request.user, files=request.FILES,  data=request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Данные успешно изменены')
