@@ -5,6 +5,7 @@ from users.forms import UserRegistrationForm
 from users.forms import UserLoginForm
 from users.forms import UsersProfileForm
 from basket.models import Basket
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def login(request):
@@ -37,6 +38,7 @@ def registration(request):
     context = {'title': 'GeekShop - Регистрация', 'form': form}
     return render(request, 'users/registration.html', context)
 
+@login_required
 def profile(request):
     user = request.user
     if request.method == 'POST':
