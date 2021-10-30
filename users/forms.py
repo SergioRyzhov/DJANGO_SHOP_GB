@@ -37,12 +37,15 @@ class UserRegistrationForm(UserCreationForm):
         fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'image', 'birth')
 
     def clean_birth(self):
-        today = date.today()
-        birth = self.cleaned_data['birth']
-        if today.year - birth.year < 18:
-            # raise ValidationError('18 years exception')
-            self.add_error("birth", "Нет 18ти")
-        return birth
+        if self.cleaned_data['birth']:
+            today = date.today()
+            birth = self.cleaned_data['birth']
+            if today.year - birth.year < 18:
+                # raise ValidationError('18 years exception')
+                self.add_error("birth", "Нет 18ти")
+            return birth
+        else:
+            return
 
 class UsersProfileForm(UserChangeForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control py-4'}))
