@@ -1,16 +1,19 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.decorators import user_passes_test
 
 from users.models import User
 from admins.forms import UserAdminRegistrationForm, UserAdminProfileForm
 
 # Create your views here.
+@user_passes_test(lambda u: u.is_staff)
 def index(request):
     context = {'title': 'Geekshop - Админ Панель'}
     return render(request, 'admins/index.html', context)
 
 
 # create
+@user_passes_test(lambda u: u.is_staff)
 def admin_users_create(request):
     if request.method == 'POST':
         form = UserAdminRegistrationForm(request.POST, request.FILES)
@@ -24,6 +27,7 @@ def admin_users_create(request):
 
 
 # read
+@user_passes_test(lambda u: u.is_staff)
 def admin_users(request):
     context = {
         'title': 'Geekshop - Пользователи',
@@ -33,6 +37,7 @@ def admin_users(request):
 
 
 # update
+@user_passes_test(lambda u: u.is_staff)
 def admin_users_update(request, id):
     selected_user = User.objects.get(id=id)
     if request.method == 'POST':
@@ -51,6 +56,7 @@ def admin_users_update(request, id):
 
 
 # delete
+@user_passes_test(lambda u: u.is_staff)
 def admin_users_delete(request, id):
     user = User.objects.get(id=id)
     user.save_delete()
