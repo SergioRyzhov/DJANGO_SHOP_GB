@@ -37,6 +37,12 @@ class UserUpdateView(UpdateView):
     success_url = reverse_lazy('admins:admin_users')
     template_name = 'admins/admin-users-update-delete.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(UserUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Админ панель - Обновление пользователя'
+        return context
+
+
 
 
 class UserDeleteView(DeleteView):
