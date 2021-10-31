@@ -9,11 +9,16 @@ from django.utils.decorators import method_decorator
 from users.models import User
 from admins.forms import UserAdminRegistrationForm, UserAdminProfileForm
 
-# Create your views here.
-@user_passes_test(lambda u: u.is_staff)
-def index(request):
-    context = {'title': 'Geekshop - Админ Панель'}
-    return render(request, 'admins/index.html', context)
+
+
+class IndexListView(ListView):
+    model = User
+    template_name = 'admins/index.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(IndexListView, self).dispatch(request, *args, **kwargs)
+
 
 
 
@@ -34,6 +39,10 @@ class UserCreateView(CreateView):
     form_class = UserAdminRegistrationForm
     success_url = reverse_lazy('admins:admin_users')
 
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserCreateView, self).dispatch(request, *args, **kwargs)
+
 
 
 class UserUpdateView(UpdateView):
@@ -46,6 +55,10 @@ class UserUpdateView(UpdateView):
         context = super(UserUpdateView, self).get_context_data(**kwargs)
         context['title'] = 'Админ панель - Обновление пользователя'
         return context
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserUpdateView, self).dispatch(request, *args, **kwargs)
 
 
 
@@ -60,6 +73,17 @@ class UserDeleteView(DeleteView):
         success_url = self.get_success_url()
         self.object.safe_delete()
         return HttpResponseRedirect(success_url)
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserDeleteView, self).dispatch(request, *args, **kwargs)
+
+
+# Create your views here.
+# @user_passes_test(lambda u: u.is_staff)
+# def index(request):
+#     context = {'title': 'Geekshop - Админ Панель'}
+#     return render(request, 'admins/index.html', context)
 
 
 # create
