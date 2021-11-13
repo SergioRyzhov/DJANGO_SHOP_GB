@@ -1,11 +1,15 @@
-from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
-from django.contrib import auth, messages
-from users.forms import UserRegistrationForm
-from users.forms import UserLoginForm
-from users.forms import UsersProfileForm
 from basket.models import Basket
+from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.shortcuts import HttpResponseRedirect, render
+from django.urls import reverse
+from django.utils.timezone import now
+from geekshop.settings import DOMAIN_NAME, EMAIL_HOST_USER
+from users.models import User
+
+from users.forms import UserLoginForm, UserRegistrationForm, UsersProfileForm
+
 # Create your views here.
 
 def login(request):
@@ -30,9 +34,13 @@ def registration(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Вы успешно зарегестрировались')
-            return HttpResponseRedirect(reverse('users:login'))
+            user = form.save()
+            if send_verify_mail(user):
+                messages.success(request, 'Сообщение пользователю отправлено\nВы успешно зарегестрировались')
+                return HttpResponseRedirect(reverse('users:login'))
+            else:
+                messages.success(request, 'Сообщение пользователю не отправлено\nВы успешно зарегестрировались')
+                return HttpResponseRedirect(reverse('users:login'))
     else:
         form = UserRegistrationForm()
     context = {'title': 'GeekShop - Регистрация', 'form': form}
@@ -63,3 +71,29 @@ def profile(request):
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('index'))
+
+def verify(request, email, activation_key):
+    try:
+        user = User.objects.get(email=email)
+        if user.activation_key == activation_key and not user.is_activation_key_expired():
+            user.is_active = True
+            user.save()
+            auth.login(request, user)
+            return render(request, 'users/verify.html')
+        else:
+            messages.error(request, f'error activation user: {user}')
+            return render(request, 'users/verify.html')
+    except Exception as err:
+        messages.error(request, f'error activation user: {err.args}')
+        return HttpResponseRedirect(reverse('users:profile'))
+
+def send_verify_mail(user):
+    verify_link = reverse('users:verify', args=[user.email, user.activation_key])
+    
+    title = f'Подтвердите учетную запись {user.username}'
+    
+    message = f'Для подтверждения учетной записи {user.username}'   \
+            f'на портале {DOMAIN_NAME} перейдите по ссылке '    \
+            f'{DOMAIN_NAME}{verify_link}'
+            
+    return send_mail(title, message, EMAIL_HOST_USER, [user.email], fail_silently=False)

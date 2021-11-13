@@ -1,7 +1,13 @@
-from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
-from users.models import User
+import hashlib
+import random
 from datetime import date
+
+from django import forms
+from django.contrib.auth.forms import (AuthenticationForm, UserChangeForm,
+                                       UserCreationForm)
+
+from users.models import User
+
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
@@ -45,7 +51,16 @@ class UserRegistrationForm(UserCreationForm):
             return birth
         else:
             return
-
+        
+    def save(self):
+        user = super(UserRegistrationForm, self).save()
+        user.is_active = False
+        salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1((user.email + salt).encode('utf-8')).hexdigest()
+        user.save()
+        
+        return user
+        
 class UsersProfileForm(UserChangeForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control py-4'}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control py-4'}))
