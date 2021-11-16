@@ -18,11 +18,15 @@ from django.urls import path, include
 from products.views import index
 from django.conf.urls.static import static
 from django.conf import settings
+from users.views import logout
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
+    path('', include('social_django.urls', namespace='social')),
+    path('logout/', logout, {'next_page': settings.LOGOUT_REDIRECT_URL},
+    name='logout'),
     path('products/', include('products.urls', namespace='products')),
     path('users/', include('users.urls', namespace='users')),
     path('basket/', include('basket.urls', namespace='basket')),
