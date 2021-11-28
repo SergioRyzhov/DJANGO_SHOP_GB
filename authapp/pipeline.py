@@ -6,7 +6,7 @@ import requests
 from django.utils import timezone
 from social_core.exceptions import AuthForbidden
 
-from geekshop.authapp.models import ShopUserProfile
+from authapp.models import ShopUserProfile
 
 
 def save_user_profile(backend, user, response, *args, **kwargs):
