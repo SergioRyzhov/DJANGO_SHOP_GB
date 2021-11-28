@@ -1,10 +1,8 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404
 
-from basketapp.models import Basket
 from mainapp.models import ProductCategory, Product
 import random
-
 
 
 def get_hot_product():
@@ -25,7 +23,8 @@ def products(request, pk=None, page=1):
     if pk is not None:
         if pk == 0:
             category = {'pk': 0, 'name': 'все'}
-            products = Product.objects.filter(is_active=True, category__is_active=True, quantity__gte=1).order_by('price')
+            products = Product.objects.filter(is_active=True, category__is_active=True, quantity__gte=1).order_by(
+                'price')
         else:
             category = get_object_or_404(ProductCategory, pk=pk)
             products = Product.objects.filter(
