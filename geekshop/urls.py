@@ -15,23 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from products.views import index
-from django.conf.urls.static import static
+from .views import main, contacts
 from django.conf import settings
-from users.views import logout
-
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
+    path('', main, name='main'),
     path('', include('social_django.urls', namespace='social')),
-    path('logout/', logout, {'next_page': settings.LOGOUT_REDIRECT_URL},
-    name='logout'),
-    path('products/', include('products.urls', namespace='products')),
-    path('users/', include('users.urls', namespace='users')),
-    path('basket/', include('basket.urls', namespace='basket')),
+    path('contacts/', contacts, name='contacts'),
+    path('products/', include('mainapp.urls', namespace='products')),
+    path('auth/', include('authapp.urls', namespace='auth')),
+    path('basket/', include('basketapp.urls', namespace='basket')),
     path('orders/', include('ordersapp.urls', namespace='orders')),
-    path('admins/', include('admins.urls', namespace='admins')),
+    path('admin_staff/', include('adminapp.urls', namespace='admin_staff')),
 ]
 
 if settings.DEBUG:
