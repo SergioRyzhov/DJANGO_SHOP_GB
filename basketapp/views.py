@@ -25,6 +25,7 @@ def basket_add(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
     basket = Basket.objects.filter(user=request.user, product=product).first()
+    # Product.objects.filter(Q(category__name='Офис') | Q(category__name='Горящие товары'))
 
     if not basket:
         basket = Basket(user=request.user, product=product)
