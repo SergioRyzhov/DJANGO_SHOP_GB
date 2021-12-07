@@ -1,3 +1,6 @@
+from django.db import connection
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, reverse, get_object_or_404
 from django.urls import reverse_lazy
@@ -5,10 +8,9 @@ from django.urls import reverse_lazy
 from adminapp.forms import ShopUserAdminEditForm, ProductEditForm
 from authapp.forms import ShopUserRegisterForm
 from authapp.models import ShopUser
-from django.contrib.auth.decorators import user_passes_test
 
 from mainapp.models import ProductCategory, Product
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -25,10 +27,10 @@ class UsersListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return ShopUser.objects.all().order_by('-is_active', '-is_superuser', '-is_staff', 'username')
 
-
     # @method_decorator(user_passes_test(lambda u: u.is_superuser))
     # def dispatch(self, *args, **kwargs):
     #     return super().dispatch(*args, **kwargs)
+
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def users(request):
@@ -49,6 +51,7 @@ class UserCreateView(CreateView):
     form_class = ShopUserRegisterForm
     template_name = 'adminapp/user_update.html'
     success_url = reverse_lazy('admin_staff:users')
+
 
 # def user_create(request):
 #     title = 'пользователи/создание'
@@ -110,6 +113,8 @@ class UserDeleteView(DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
     # def user_delete(request, pk):
+
+
 #     title = 'пользователи/удаление'
 #
 #     user = get_object_or_404(ShopUser, pk=pk)
@@ -231,3 +236,21 @@ def product_delete(request, pk):
     context = {'title': title, 'product_to_delete': product}
 
     return render(request, 'adminapp/product_delete.html', context)
+
+
+def db_profile_by_type(prefix, type, queries):
+    update_queries = list(filter(lambda x: type in x['sql'], queries))
+    print(f'db_profile {type} for {prefix}: ')
+    [print(query['sql']) for query in update_queries]
+
+
+@receiver(pre_save, sender=ProductCategory)
+def product_is_active_update_productcategory_save(sender, instance, **kwargs):
+    if instance.pk:
+        instance.product_set.update(is_active=instance.is_active)
+        # if instance.is_active:
+        #     instance.product_set.update(is_active=True)
+        # else:
+        #     instance.product_set.update(is_active=False)
+
+        db_profile_by_type(sender, 'UPDATE', connection.queries)
